@@ -1,0 +1,267 @@
+# Игнорируемые файлы C++
+##
+
+# Файлы сборки и исполняемые
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.lib
+*.a
+*.pdb
+*.idb
+*.ipdb
+*.iobj
+*.ilk
+*.exp
+*.map
+
+# Промежуточные файлы компиляции
+*.sbr
+*.bsc
+
+# Файлы линковщика
+*.lnk
+
+# Файлы тестов
+*.test
+*.gcda
+*.gcno
+
+# Автогенерируемые файлы
+*.gch
+*.pch
+
+# Файлы покрытия кода
+*.gcov
+
+# Скомпилированные файлы Python (если используется в проекте)
+__pycache__/
+*.py[cod]
+
+# Игнорируемые каталоги
+build/
+Debug/
+Release/
+x64/
+x86/
+Win32/
+obj/
+out/
+bin/
+.vs/
+outbuild/
+CMakeFiles/
+
+# Файлы IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Файлы CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CMakeUserPresets.json
+*.cmake
+
+# Файлы Visual Studio
+##
+
+# Пользовательские файлы
+*.user
+*.userosscache
+*.sln.docstates
+
+# Файлы пользовательских настроек
+*.suo
+*.cache
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+
+# Файлы выходной сборки
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Автогенерируемые файлы Visual Studio
+ipch/
+*.tlog
+*.log
+*.idb
+*.pdb
+*.sbr
+*.ilk
+*.meta
+*.db
+
+# Файлы препроцессора
+*.i
+*.ii
+
+# Файлы развертывания
+[Bb]uild[Ll]og.*
+
+# Резервные копии и временные файлы
+*.[Cc]ache
+*.ilk
+*.map
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.vspscc
+*.vssscc
+*.old
+*.orig
+
+# Файлы пакетов NuGet
+packages/
+*.nupkg
+*.nuspec
+
+# Файлы модульного тестирования
+[Mm]ocha[Rr]eports/
+[Nn]unit[Rr]eports/
+
+# Файлы покрытия кода
+[Cc]ode[Cc]overage/
+*.gcov
+*.noaaconfig
+
+# Строгие файлы именования
+SharedAssemblyInfo.cs
+*.dotCover
+*.coveragexml
+
+# Файлы DotTrace профилировщика
+*.sass-cache
+
+# Макросы среды
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity
+TeamCity*
+*.teamcity
+
+# Файлы профилировщика Visual Studio
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Файлы анализа кода
+*.FxCop
+
+# Файлы базы данных SQL Server
+*.mdf
+*.ldf
+
+# Файлы базы данных SQLite
+*.sqlite3
+
+# Файлы StyleCop
+StyleCopReport.xml
+
+# Файлы инсталлятора
+*.pidb
+*.pdb
+
+# Готовые установки
+[Ee]xpress/
+*.[Pp]ublish.xml
+
+# Файлы веб-публикации
+*.pubxml
+*.publishsettings
+
+# Файлы базы данных TFS
+*.tss
+
+# Файлы кэша шелль-интеграции
+*.msi
+*.msm
+*.msp
+
+# Файлы Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Файлы Mac OS
+.DS_Store
+
+# Файлы Linux
+*~
+
+# Дополнительные файлы для C++/CMake проектов
+##
+
+# Файлы конфигурации Conan (менеджер пакетов C++)
+conanfile.pyc
+conanfile.txt.bak
+conaninfo/
+conanbuildinfo.cmake
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json
+
+# Файлы vcpkg (менеджер пакетов C++)
+vcpkg_installed/
+vcpkg_manifest.txt.bak
+
+# Файлы CLion
+.idea/
+cmake-build-*/
+
+# Файлы Visual Studio Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# Файлы Doxygen (документация)
+doxygen/
+html/
+latex/
+
+# Файлы зависимостей
+deps/
+external/
+thirdparty/
+
+# Кэшированные файлы
+.cache/
+
+# Локальные настройки
+local.properties
+local.settings.json
+
+# Файлы конфигурации сборки
+compile_commands.json
+
+# Файлы бенчмарков
+benchmark_results/
+*.bench
