@@ -36,7 +36,6 @@ int main() {
         std::cin >> B[i];
     }
 
-    int* tempResult = new int[M];
     int resultSize = 0;
 
     for (int i = 0; i < M; i++) {
@@ -50,26 +49,47 @@ int main() {
         }
 
         if (!foundInB) {
-            bool alreadyInResult = false;
-
-            for (int k = 0; k < resultSize; k++) {
-                if (tempResult[k] == A[i]) {
-                    alreadyInResult = true;
+            bool duplicateInA = false;
+            for (int k = 0; k < i; k++) {
+                if (A[k] == A[i]) {
+                    duplicateInA = true;
                     break;
                 }
             }
 
-            if (!alreadyInResult) {
-                tempResult[resultSize] = A[i];
+            if (!duplicateInA) {
                 resultSize++;
             }
         }
     }
 
     int* C = new int[resultSize];
+    int index = 0;
 
-    for (int i = 0; i < resultSize; i++) {
-        C[i] = tempResult[i];
+    for (int i = 0; i < M; i++) {
+        bool foundInB = false;
+
+        for (int j = 0; j < N; j++) {
+            if (A[i] == B[j]) {
+                foundInB = true;
+                break;
+            }
+        }
+
+        if (!foundInB) {
+            bool alreadyInC = false;
+            for (int k = 0; k < index; k++) {
+                if (C[k] == A[i]) {
+                    alreadyInC = true;
+                    break;
+                }
+            }
+
+            if (!alreadyInC) {
+                C[index] = A[i];
+                index++;
+            }
+        }
     }
 
     std::cout << "\n=== Результаты ===" << std::endl;
@@ -101,7 +121,6 @@ int main() {
 
     delete[] A;
     delete[] B;
-    delete[] tempResult;
     delete[] C;
 
     return 0;
