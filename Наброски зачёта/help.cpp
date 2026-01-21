@@ -5,8 +5,8 @@
 #include <string>
 #include <windows.h>
 #include <cmath>
-#include <cstdlib>  // Для rand() и srand()
-#include <ctime>    // Для time()
+#include <cstdlib> 
+#include <ctime> 
 
 using namespace std;
 
@@ -21,14 +21,12 @@ private:
     char viewDirection;
     bool torchMode;
 
-    // Система фонарика
-    int batteryCharge;     // 0-100
-    int stepsCounter;      // счетчик шагов
-    vector<char> inventory; // инвентарь (B - батарейки)
+    int batteryCharge;
+    int stepsCounter;
+    vector<char> inventory;
 
-    // Интерфейс
     bool showInventory;
-    string message;        // Сообщение для отображения
+    string message;      
 
 public:
     Game() : playerX(0), playerY(0), width(0), height(0),
@@ -92,7 +90,6 @@ public:
         return true;
     }
 
-    // Использовать батарею
     bool useBattery() {
         stepsCounter++;
         if (stepsCounter >= 5) {
@@ -102,7 +99,6 @@ public:
                 return true;
             }
             else {
-                // Батарея разряжена - выключаем фонарик
                 if (torchMode) {
                     torchMode = false;
                     message = "Flashlight discharged!";
@@ -113,7 +109,6 @@ public:
         return true;
     }
 
-    // Зарядить фонарик
     void rechargeBattery(int amount) {
         int oldCharge = batteryCharge;
         batteryCharge += amount;
@@ -121,16 +116,13 @@ public:
         message = "Battery recharged: +" + to_string(batteryCharge - oldCharge) + "%";
     }
 
-    // Подобрать предмет
     void pickupItem() {
-        // Проверяем клетку под игроком (она уже '@', проверяем что было ДО)
-        // Вместо этого проверяем все соседние клетки
+
         bool pickedUp = false;
 
-        // Проверяем все 8 направлений вокруг игрока
         for (int dy = -1; dy <= 1; dy++) {
             for (int dx = -1; dx <= 1; dx++) {
-                if (dx == 0 && dy == 0) continue; // Пропускаем клетку игрока
+                if (dx == 0 && dy == 0) continue;
 
                 int checkX = playerX + dx;
                 int checkY = playerY + dy;
@@ -138,7 +130,7 @@ public:
                 if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height) {
                     if (level[checkY][checkX] == 'B') {
                         inventory.push_back('B');
-                        level[checkY][checkX] = '.'; // Убираем батарейку с уровня
+                        level[checkY][checkX] = '.'; 
                         pickedUp = true;
                         message = "Battery picked up!";
                     }
@@ -151,13 +143,11 @@ public:
         }
     }
 
-    // Использовать батарейку из инвентаря
     void useBatteryFromInventory() {
         if (!inventory.empty()) {
-            // Ищем первую батарейку
             for (auto it = inventory.begin(); it != inventory.end(); ++it) {
                 if (*it == 'B') {
-                    rechargeBattery(25); // +25% заряда
+                    rechargeBattery(25);
                     inventory.erase(it);
                     break;
                 }
@@ -174,7 +164,6 @@ public:
     }
 
     bool isVisibleTorch(int x, int y) {
-        // Если батарея разряжена - ничего не видно
         if (batteryCharge <= 0) return false;
 
         int relX = x - playerX;
@@ -252,7 +241,7 @@ public:
                 setColor(8);
             }
             else if (ch == 'B') {
-                setColor(14); // Желтый для батареек
+                setColor(14); 
             }
             else if (ch == '.') {
                 setColor(15);
@@ -284,9 +273,8 @@ public:
         resetColor();
     }
 
-    // Отрисовка инвентаря
     void displayInventory(int startX) {
-        setColor(11); // Голубой
+        setColor(11); 
         cout << "=== INVENTORY ===";
         resetColor();
         cout << endl;
@@ -300,7 +288,7 @@ public:
                 if (item == 'B') batteryCount++;
             }
 
-            setColor(14); // Желтый
+            setColor(14); 
             cout << "   Batteries: " << batteryCount;
             resetColor();
             cout << endl;
@@ -317,24 +305,23 @@ public:
         }
 
         cout << endl;
-        setColor(10); // Зеленый
+        setColor(10); 
         cout << "Use: U";
         resetColor();
         cout << endl;
     }
 
-    // Отрисовка информации о фонарике
     void displayBatteryInfo(int startX) {
-        setColor(11); // Голубой
+        setColor(11); 
         cout << "=== FLASHLIGHT ===";
         resetColor();
         cout << endl;
 
         cout << "Charge: [";
-        setColor(batteryCharge > 20 ? 10 : 12); // Зеленый или красный
+        setColor(batteryCharge > 20 ? 10 : 12);
         for (int i = 0; i < 10; i++) {
             if (batteryCharge >= (i + 1) * 10) {
-                cout << char(219); // Полный блок
+                cout << char(219);
             }
             else {
                 cout << " ";
@@ -346,11 +333,11 @@ public:
         cout << "Mode: ";
         if (torchMode) {
             if (batteryCharge > 0) {
-                setColor(10); // Зеленый
-                cout << "TORCH";
+                setColor(10);
+                cout << "FLASHLIGHT";
             }
             else {
-                setColor(12); // Красный
+                setColor(12);
                 cout << "DISCHARGED";
             }
         }
@@ -366,14 +353,11 @@ public:
 
         markVisibleCells();
 
-        // Отрисовка уровня и интерфейса в одной строке
         for (int y = 0; y < height; y++) {
-            // Уровень
             for (int x = 0; x < width; x++) {
                 displayChar(x, y);
             }
 
-            // Интерфейс справа (только первые несколько строк)
             if (y == 0) {
                 cout << "  ";
                 setColor(11);
@@ -420,19 +404,17 @@ public:
                 else if (displayDir == 'd') cout << "RIGHT (D)";
             }
             else if (y == 10) {
-                // Сообщение
                 if (!message.empty()) {
                     setColor(14);
                     cout << "  " << message;
                     resetColor();
-                    message = ""; // Сбрасываем сообщение после показа
+                    message = "";
                 }
             }
 
             cout << endl;
         }
 
-        // Отображение инвентаря или информации о фонарике
         cout << "  ";
         if (showInventory) {
             displayInventory(width + 2);
@@ -447,7 +429,7 @@ public:
             return false;
         }
         char cell = level[y][x];
-        return cell == '.' || cell == 'B'; // Можно ходить по полу и через батарейки
+        return cell == '.' || cell == 'B';
     }
 
     void movePlayer(int dx, int dy) {
@@ -455,15 +437,12 @@ public:
         int newY = playerY + dy;
 
         if (canMove(newX, newY)) {
-            // Используем заряд фонарика
             if (torchMode) {
                 if (!useBattery()) {
-                    // Если батарея разрядилась во время движения
                     torchMode = false;
                 }
             }
 
-            // Запоминаем, что было на клетке куда идем
             char targetCell = level[newY][newX];
 
             visited[playerY][playerX] = true;
@@ -472,10 +451,8 @@ public:
             playerY = newY;
             visited[playerY][playerX] = true;
 
-            // Ставим игрока
             level[playerY][playerX] = '@';
 
-            // Если встали на батарейку - автоматически подбираем
             if (targetCell == 'B') {
                 inventory.push_back('B');
                 message = "Battery picked up automatically!";
@@ -535,17 +512,17 @@ public:
                             }
                         }
                         else {
-                            torchMode = false; // Нельзя включить разряженный
+                            torchMode = false;
                             message = "Flashlight discharged!";
                         }
                         break;
                     case 'i':
                         showInventory = !showInventory;
                         break;
-                    case 'p': // Подобрать предмет (ручной сбор с соседних клеток)
+                    case 'p':
                         pickupItem();
                         break;
-                    case 'u': // Использовать предмет из инвентаря
+                    case 'u': 
                         useBatteryFromInventory();
                         break;
                     case 'q':
@@ -564,14 +541,13 @@ public:
 };
 
 int main() {
-    // Для русского текста (если нужно будет вернуть)
+    // Для русского текста потом верну
     // SetConsoleCP(1251);
     // SetConsoleOutputCP(1251);
 
     system("title Maze Game with Flashlight");
     system("color 07");
 
-    // Инициализация рандома
     srand(static_cast<unsigned int>(time(nullptr)));
 
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
