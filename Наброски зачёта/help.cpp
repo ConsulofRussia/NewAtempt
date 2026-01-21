@@ -26,13 +26,23 @@ private:
     vector<char> inventory;
 
     bool showInventory;
-    string message;      
+    string message;
+
+    bool inBattle;
+    int enemyHP;
+    int playerHP;
+    int playerAttack;
+    int enemyAttack;
+    int battleX, battleY;
 
 public:
     Game() : playerX(0), playerY(0), width(0), height(0),
         viewDirection('s'), torchMode(false),
         batteryCharge(100), stepsCounter(0),
-        showInventory(false), message("") {
+        showInventory(false), message(""),
+        inBattle(false), enemyHP(0), playerHP(100),
+        playerAttack(20), enemyAttack(15),
+        battleX(0), battleY(0) {
         hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     }
 
@@ -72,7 +82,7 @@ public:
         bool found = false;
         for (int y = 0; y < height && !found; y++) {
             for (int x = 0; x < width && !found; x++) {
-                if (level[y][x] == '.' || level[y][x] == 'B') {
+                if (level[y][x] == '.' || level[y][x] == 'B' || level[y][x] == '&') {
                     playerX = x;
                     playerY = y;
                     level[y][x] = '@';
@@ -117,7 +127,6 @@ public:
     }
 
     void pickupItem() {
-
         bool pickedUp = false;
 
         for (int dy = -1; dy <= 1; dy++) {
@@ -130,7 +139,7 @@ public:
                 if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height) {
                     if (level[checkY][checkX] == 'B') {
                         inventory.push_back('B');
-                        level[checkY][checkX] = '.'; 
+                        level[checkY][checkX] = '.';
                         pickedUp = true;
                         message = "Battery picked up!";
                     }
@@ -140,6 +149,35 @@ public:
 
         if (!pickedUp) {
             message = "No battery nearby";
+        }
+    }
+
+    bool checkEnemyNearby() {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0) continue; 
+
+                int checkX = playerX + dx;
+                int checkY = playerY + dy;
+
+                if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height) {
+                    if (level[checkY][checkX] == '&') {
+                        battleX = checkX;
+                        battleY = checkY;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    void startBattleWithNearbyEnemy() {
+        if (checkEnemyNearby()) {
+            enterBattle(battleX, battleY);
+        }
+        else {
+            message = "No enemy nearby to fight!";
         }
     }
 
@@ -222,7 +260,7 @@ public:
                         wallsRevealed[y][x] = true;
                     }
                     else if (level[y][x] == '.' || level[y][x] == '@' ||
-                        level[y][x] == 'B' || level[y][x] == ' ') {
+                        level[y][x] == 'B' || level[y][x] == ' ' || level[y][x] == '&') {
                         visited[y][x] = true;
                     }
                 }
@@ -241,7 +279,10 @@ public:
                 setColor(8);
             }
             else if (ch == 'B') {
-                setColor(14); 
+                setColor(14);
+            }
+            else if (ch == '&') {
+                setColor(12); 
             }
             else if (ch == '.') {
                 setColor(15);
@@ -256,7 +297,7 @@ public:
                     setColor(0);
                 }
             }
-            else if (ch == '.' || ch == 'B') {
+            else if (ch == '.' || ch == 'B' || ch == '&') {
                 if (visited[y][x]) {
                     setColor(8);
                 }
@@ -274,7 +315,7 @@ public:
     }
 
     void displayInventory(int startX) {
-        setColor(11); 
+        setColor(11);
         cout << "=== INVENTORY ===";
         resetColor();
         cout << endl;
@@ -288,7 +329,7 @@ public:
                 if (item == 'B') batteryCount++;
             }
 
-            setColor(14); 
+            setColor(14);
             cout << "   Batteries: " << batteryCount;
             resetColor();
             cout << endl;
@@ -305,14 +346,14 @@ public:
         }
 
         cout << endl;
-        setColor(10); 
+        setColor(10);
         cout << "Use: U";
         resetColor();
         cout << endl;
     }
 
     void displayBatteryInfo(int startX) {
-        setColor(11); 
+        setColor(11);
         cout << "=== FLASHLIGHT ===";
         resetColor();
         cout << endl;
@@ -383,15 +424,18 @@ public:
                 cout << "  Use item: U";
             }
             else if (y == 7) {
-                cout << "  Exit:    Q";
+                cout << "  Fight:   F (when enemy nearby)";
             }
             else if (y == 8) {
+                cout << "  Exit:    Q";
+            }
+            else if (y == 9) {
                 cout << "  ";
                 setColor(10);
                 cout << "=== STATUS ===";
                 resetColor();
             }
-            else if (y == 9) {
+            else if (y == 10) {
                 cout << "  Direction: ";
                 char displayDir = viewDirection;
                 if (displayDir == 72) cout << "UP";
@@ -403,7 +447,14 @@ public:
                 else if (displayDir == 'a') cout << "LEFT (A)";
                 else if (displayDir == 'd') cout << "RIGHT (D)";
             }
-            else if (y == 10) {
+            else if (y == 11) {
+                if (checkEnemyNearby()) {
+                    setColor(12);
+                    cout << "  Enemy nearby! Press F to fight";
+                    resetColor();
+                }
+            }
+            else if (y == 12) {
                 if (!message.empty()) {
                     setColor(14);
                     cout << "  " << message;
@@ -424,11 +475,239 @@ public:
         }
     }
 
+    void displayBattle() {
+        system("cls");
+
+        setColor(12);
+        cout << "================================" << endl;
+        cout << "           BATTLE MODE          " << endl;
+        cout << "================================" << endl;
+        resetColor();
+
+        cout << endl;
+
+        setColor(12);
+        cout << "ENEMY" << endl;
+        cout << "HP: [";
+        for (int i = 0; i < 20; i++) {
+            if (enemyHP > i * 5) {
+                cout << char(219);
+            }
+            else {
+                cout << " ";
+            }
+        }
+        cout << "] " << enemyHP << "/100" << endl;
+        resetColor();
+
+        cout << endl;
+
+        setColor(10);
+        cout << "PLAYER" << endl;
+        cout << "HP: [";
+        for (int i = 0; i < 20; i++) {
+            if (playerHP > i * 5) {
+                cout << char(219);
+            }
+            else {
+                cout << " ";
+            }
+        }
+        cout << "] " << playerHP << "/100" << endl;
+        resetColor();
+
+        cout << endl;
+        cout << "================================" << endl;
+        cout << "        CHOOSE ACTION:" << endl;
+        cout << "================================" << endl;
+        cout << endl;
+
+        setColor(14);
+        cout << "  [A] - ATTACK (Deal " << playerAttack << " damage)" << endl;
+        cout << "  [F] - FLEE (Try to escape)" << endl;
+        cout << "  [U] - USE BATTERY (Restore 30 HP)" << endl;
+        resetColor();
+
+        cout << endl;
+        if (!message.empty()) {
+            setColor(14);
+            cout << "> " << message << endl;
+            resetColor();
+            message = "";
+        }
+    }
+
+    void enterBattle(int enemyX, int enemyY) {
+        inBattle = true;
+        battleX = enemyX;
+        battleY = enemyY;
+
+        // Инициализация боя
+        enemyHP = 100;
+        playerHP = 100;
+
+        battleLoop();
+    }
+
+    void playerAttackEnemy() {
+        int damage = playerAttack + (rand() % 10);
+        enemyHP -= damage;
+        if (enemyHP < 0) enemyHP = 0;
+
+        message = "You dealt " + to_string(damage) + " damage to enemy!";
+
+        if (enemyHP <= 0) {
+            // Победа
+            displayBattle();
+            Sleep(1000);
+
+            system("cls");
+            setColor(10);
+            cout << "================================" << endl;
+            cout << "        VICTORY!" << endl;
+            cout << "================================" << endl;
+            resetColor();
+            cout << "You defeated the enemy!" << endl;
+            cout << "Press any key to continue..." << endl;
+            _getch();
+
+            // Убираем врага с карты
+            level[battleY][battleX] = '.';
+            visited[battleY][battleX] = true;
+
+            inBattle = false;
+            return;
+        }
+
+        // Враг атакует в ответ
+        Sleep(500);
+        int enemyDamage = enemyAttack + (rand() % 10);
+        playerHP -= enemyDamage;
+        if (playerHP < 0) playerHP = 0;
+
+        message += "\nEnemy dealt " + to_string(enemyDamage) + " damage to you!";
+
+        if (playerHP <= 0) {
+            // Поражение
+            displayBattle();
+            Sleep(1000);
+
+            system("cls");
+            setColor(12);
+            cout << "================================" << endl;
+            cout << "         GAME OVER" << endl;
+            cout << "================================" << endl;
+            resetColor();
+            cout << "You were defeated..." << endl;
+            cout << "Press any key to exit..." << endl;
+            _getch();
+            exit(0);
+        }
+    }
+
+    bool tryFlee() {
+        // 70% шанс побега
+        if (rand() % 100 < 70) {
+            return true;
+        }
+        return false;
+    }
+
+    void playerFlee() {
+        if (tryFlee()) {
+            message = "You successfully fled from battle!";
+            displayBattle();
+            Sleep(1000);
+            inBattle = false;
+        }
+        else {
+            message = "Failed to flee! Enemy attacks!";
+
+            Sleep(500);
+            int enemyDamage = enemyAttack + (rand() % 15);
+            playerHP -= enemyDamage;
+            if (playerHP < 0) playerHP = 0;
+
+            message += "\nEnemy dealt " + to_string(enemyDamage) + " damage to you!";
+
+            if (playerHP <= 0) {
+                displayBattle();
+                Sleep(1000);
+
+                system("cls");
+                setColor(12);
+                cout << "================================" << endl;
+                cout << "         GAME OVER" << endl;
+                cout << "================================" << endl;
+                resetColor();
+                cout << "You were defeated..." << endl;
+                cout << "Press any key to exit..." << endl;
+                _getch();
+                exit(0);
+            }
+        }
+    }
+
+    void useBatteryInBattle() {
+        if (!inventory.empty()) {
+            bool used = false;
+            for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+                if (*it == 'B') {
+                    int heal = 30;
+                    playerHP += heal;
+                    if (playerHP > 100) playerHP = 100;
+
+                    inventory.erase(it);
+                    message = "Used battery! Restored " + to_string(heal) + " HP!";
+                    used = true;
+                    break;
+                }
+            }
+
+            if (!used) {
+                message = "No batteries in inventory!";
+            }
+        }
+        else {
+            message = "Inventory is empty!";
+        }
+    }
+
+    void battleLoop() {
+        while (inBattle) {
+            displayBattle();
+
+            if (_kbhit()) {
+                int key = _getch();
+                char ch = tolower(key);
+
+                switch (ch) {
+                case 'a':
+                    playerAttackEnemy();
+                    break;
+                case 'f':
+                    playerFlee();
+                    break;
+                case 'u':
+                    useBatteryInBattle();
+                    break;
+                default:
+                    continue;
+                }
+
+                if (!inBattle) {
+                    break;
+                }
+            }
+        }
+    }
+
     bool canMove(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return false;
         }
         char cell = level[y][x];
+
         return cell == '.' || cell == 'B';
     }
 
@@ -522,8 +801,11 @@ public:
                     case 'p':
                         pickupItem();
                         break;
-                    case 'u': 
+                    case 'u':
                         useBatteryFromInventory();
+                        break;
+                    case 'f': // Новая клавиша для начала боя
+                        startBattleWithNearbyEnemy();
                         break;
                     case 'q':
                         running = false;
@@ -545,7 +827,7 @@ int main() {
     // SetConsoleCP(1251);
     // SetConsoleOutputCP(1251);
 
-    system("title Maze Game with Flashlight");
+    system("title Maze Game with Flashlight and Battle System");
     system("color 07");
 
     srand(static_cast<unsigned int>(time(nullptr)));
