@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f207aa2f-746e-4987-b108-28717cf7c3cf}</ProjectGuid>
-    <RootNamespace>работанауроке04022026</RootNamespace>
+    <ProjectGuid>{81f30bef-a860-4b28-b2aa-67bddde0c1cb}</ProjectGuid>
+    <RootNamespace>letscry</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,9 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="letscry.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="work.cpp" />
-    <ClCompile Include="работа на уроке 04.02.2026.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scarypookie.h" />
