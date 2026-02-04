@@ -1,158 +1,27 @@
-﻿#include "scarypookie.h"
+﻿#include <iostream>
+#include "scarypookie.h"
+#include "Windows.h"
+int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    Complex a(3, 4);
+    Complex b;
 
-Complex::Complex() : real(0.0), imag(0.0) {}
+    std::cout << "Введите комплексное число, типо (2 2): ";
+    std::cin >> b;
 
-Complex::Complex(double r) : real(r), imag(0.0) {}
+    std::cout << "a = " << a << "\n";
+    std::cout << "b = " << b << "\n\n";
 
-Complex::Complex(double r, double im) : real(r), imag(im) {}
+    std::cout << "a + b = " << (a + b) << "\n";
+    std::cout << "a - b = " << (a - b) << "\n";
+    std::cout << "a * b = " << (a * b) << "\n";
+    std::cout << "a / b = " << (a / b) << "\n";
+    std::cout << "|a|   = " << a.getModulus() << "\n";
 
-
-double Complex::getModulus() const
-{
-    return std::sqrt(real * real + imag * imag);
-}
-
-
-bool Complex::equals(const Complex& other) const
-{
-    return std::abs(getModulus() - other.getModulus()) < 1e-9;
-}
-
-
-bool Complex::lessThan(const Complex& other) const
-{
-    return getModulus() < other.getModulus() - 1e-9;
-}
-
-
-void Complex::add(const Complex& other)
-{
-    real += other.real;
-    imag += other.imag;
-}
-
-
-void Complex::subtract(const Complex& other)
-{
-    real -= other.real;
-    imag -= other.imag;
-}
-
-
-void Complex::multiply(const Complex& other)
-{
-    double r = real * other.real - imag * other.imag;
-    double i = real * other.imag + imag * other.real;
-    real = r;
-    imag = i;
-}
-
-
-void Complex::divide(const Complex& other)
-{
-    double denom = other.real * other.real + other.imag * other.imag;
-    if (denom == 0) {
-        std::cout << "division by zero\n";
-        return;
+    if (a == Complex(3, 4)) {
+        std::cout << "a == 3 + 4i\n";
     }
-    double r = (real * other.real + imag * other.imag) / denom;
-    double i = (imag * other.real - real * other.imag) / denom;
-    real = r;
-    imag = i;
-}
-
-
-Complex Complex::operator+(const Complex& other) const
-{
-    Complex res = *this;
-    res.add(other);
-    return res;
-}
-
-
-Complex Complex::operator-(const Complex& other) const
-{
-    Complex res = *this;
-    res.subtract(other);
-    return res;
-}
-
-
-Complex Complex::operator*(const Complex& other) const
-{
-    Complex res = *this;
-    res.multiply(other);
-    return res;
-}
-
-
-Complex Complex::operator/(const Complex& other) const
-{
-    Complex res = *this;
-    res.divide(other);
-    return res;
-}
-
-
-Complex& Complex::operator+=(const Complex& other)
-{
-    add(other);
-    return *this;
-}
-
-
-Complex& Complex::operator-=(const Complex& other)
-{
-    subtract(other);
-    return *this;
-}
-
-
-Complex& Complex::operator*=(const Complex& other)
-{
-    multiply(other);
-    return *this;
-}
-
-
-Complex& Complex::operator/=(const Complex& other)
-{
-    divide(other);
-    return *this;
-}
-
-
-Complex Complex::operator-() const
-{
-    return Complex(-real, -imag);
-}
-
-
-void Complex::print() const
-{
-    std::cout << real;
-    if (imag >= 0) {
-        std::cout << " + " << imag << "i";
-    }
-    else {
-        std::cout << " - " << -imag << "i";
-    }
-}
-int main()
-{
-    Complex a(2, 1);
-    Complex b(4, -5);
-
-    std::cout << "(";
-    a.print();
-    std::cout << ") + (";
-    b.print();
-    std::cout << ") = ";
-
-    Complex res = a + b;
-    res.print();
-
-    std::cout << "\n";
 
     return 0;
 }
