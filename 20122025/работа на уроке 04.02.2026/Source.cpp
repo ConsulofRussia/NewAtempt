@@ -30,15 +30,9 @@ Complex Complex::operator*(const Complex& other) const {
 
 Complex Complex::operator/(const Complex& other) const {
     double denom = other.real * other.real + other.imag * other.imag;
-    if (std::abs(denom) < 1e-12) {
-        std::cerr << "Ошибка: деление на ноль в комплексных числах\n";
-        return Complex(0, 0);
-    }
-    double conj_r = other.real;
-    double conj_i = -other.imag;
     return Complex(
-        (real * conj_r - imag * conj_i) / denom,
-        (real * conj_i + imag * conj_r) / denom
+        (real * other.real + imag * other.imag) / denom,
+        (imag * other.real - real * other.imag) / denom
     );
 }
 
