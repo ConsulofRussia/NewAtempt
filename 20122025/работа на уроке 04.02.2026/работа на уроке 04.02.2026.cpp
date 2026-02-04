@@ -1,5 +1,4 @@
 ﻿#include "scarypookie.h"
-#include "Windows.h"
 
 Complex::Complex() : real(0.0), imag(0.0) {}
 

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-
+#include "Windows.h"
 class Complex
 {
 public:
@@ -39,16 +39,20 @@ public:
 
 int main()
 {
-    Complex a(3, 4);
-    Complex b(1, 2);
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    Complex a(2, 1);
+    Complex b(4, -5);
 
-    std::cout << "a: ";
+    std::cout << "(";
     a.print();
-    std::cout << "\n";
+    std::cout << ") + (";
+    b.print();
+    std::cout << ") = ";
 
-    Complex sum = a + b;
-    std::cout << "sum: ";
-    sum.print();
+    Complex res = a + b;
+    res.print();
+
     std::cout << "\n";
 
     return 0;
