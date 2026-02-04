@@ -139,34 +139,3 @@ void Complex::print() const
         std::cout << " - " << -imag << "i";
     }
 }
-int main()
-{
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
-    Complex a(3, 4);
-    Complex b(1, -2);
-
-    std::cout << "a: "; a.print(); std::cout << "\n";
-    std::cout << "b: "; b.print(); std::cout << "\n";
-
-    Complex c = a + b;
-    std::cout << "a + b: "; c.print(); std::cout << "\n";
-
-    c = a * b;
-    std::cout << "a * b: "; c.print(); std::cout << "\n";
-
-    std::cout << "|a| = " << a.getModulus() << "\n";
-    std::cout << "|b| = " << b.getModulus() << "\n";
-
-    if (a.equals(b)) {
-        std::cout << "равны по модулю\n";
-    }
-    else if (a.lessThan(b)) {
-        std::cout << "a меньше b по модулю\n";
-    }
-    else {
-        std::cout << "a больше b по модулю\n";
-    }
-
-    return 0;
-}

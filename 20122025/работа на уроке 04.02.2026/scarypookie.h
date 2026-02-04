@@ -36,3 +36,20 @@ public:
 
     void print() const;
 };
+
+int main()
+{
+    Complex a(3, 4);
+    Complex b(1, 2);
+
+    std::cout << "a: ";
+    a.print();
+    std::cout << "\n";
+
+    Complex sum = a + b;
+    std::cout << "sum: ";
+    sum.print();
+    std::cout << "\n";
+
+    return 0;
+}
