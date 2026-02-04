@@ -138,3 +138,21 @@ void Complex::print() const
         std::cout << " - " << -imag << "i";
     }
 }
+int main()
+{
+    Complex a(2, 1);
+    Complex b(4, -5);
+
+    std::cout << "(";
+    a.print();
+    std::cout << ") + (";
+    b.print();
+    std::cout << ") = ";
+
+    Complex res = a + b;
+    res.print();
+
+    std::cout << "\n";
+
+    return 0;
+}
